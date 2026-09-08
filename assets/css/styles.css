@@ -1231,6 +1231,64 @@ section { position: relative; }
 .js .stagger > .reveal:nth-child(7) { transition-delay: calc(var(--stagger) * 6); }
 .js .stagger > .reveal:nth-child(8) { transition-delay: calc(var(--stagger) * 7); }
 
+/* --- Entrance loader ----------------------------------------------------- */
+/* Only exists when JS can dismiss it. Without JS it is never displayed at all,
+   so a scripting failure can never leave the page behind a curtain. */
+.loader { display: none; }
+
+.js .loader {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  background: var(--charcoal);
+  transition: opacity 600ms var(--ease), visibility 600ms;
+  /* Belt and braces: if the script dies before dismissing, CSS clears it. */
+  animation: loader-failsafe 400ms var(--ease) 2600ms forwards;
+}
+.js .loader.is-done { opacity: 0; visibility: hidden; }
+
+.loader__inner { display: grid; justify-items: center; gap: .45rem; padding: 2rem; }
+
+.loader__name {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 4vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ivory);
+}
+.loader__group {
+  margin: 0;
+  font-size: .5625rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--taupe);
+}
+.loader__bar {
+  display: block;
+  width: 140px;
+  height: 1px;
+  margin-top: 1.5rem;
+  background: rgba(246, 242, 236, .16);
+  overflow: hidden;
+}
+.loader__bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: var(--taupe);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: loader-fill 1.5s var(--ease) forwards;
+}
+
+@keyframes loader-fill { to { transform: scaleX(1); } }
+@keyframes loader-failsafe { to { opacity: 0; visibility: hidden; } }
+
 /* --- Hero entrance ------------------------------------------------------- */
 /* Runs on load rather than on scroll, so the first thing a visitor sees is a
    sequence rather than five things arriving at once. */
@@ -1265,4 +1323,6 @@ section { position: relative; }
   .js .hero-in { opacity: 1; transform: none; }
   .js .reveal--zoom img,
   .js .hero-in--media img { transform: none; }
+  /* No curtain at all — go straight to the content. */
+  .js .loader { display: none; animation: none; }
 }

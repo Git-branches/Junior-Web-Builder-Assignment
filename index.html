@@ -31,6 +31,18 @@
 
 <a class="skip-link" href="#main">Skip to content</a>
 
+<!-- Entrance curtain. Hidden entirely without JavaScript, and it carries a CSS
+     failsafe that clears it even if the script never runs, so the page can
+     never end up permanently covered. aria-hidden keeps it out of the reading
+     order — screen readers go straight to the content. -->
+<div class="loader" data-loader aria-hidden="true">
+  <div class="loader__inner">
+    <p class="loader__name">Marci Metzger</p>
+    <p class="loader__group">The Ridge Realty Group</p>
+    <span class="loader__bar"></span>
+  </div>
+</div>
+
 <!-- ============================================================ 01 · HEADER -->
 <header class="header" id="top" data-header>
   <div class="shell header__inner">

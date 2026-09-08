@@ -69,18 +69,54 @@
   }
 
   /* ------------------------------------------------------- Hero entrance */
-  /* Runs immediately rather than waiting on scroll — but after one painted
-     frame, so the browser has a "before" state to transition from. */
+  /* Held until the curtain lifts, so the staggered sequence is not played out
+     of sight behind it. */
   var hero = document.querySelector('[data-hero]');
 
-  if (hero) {
+  var startHero = function () {
+    if (!hero) { return; }
     if (reducedMotion.matches) {
       hero.classList.add('is-ready');
     } else {
+      /* One painted frame first, so there is a "before" state to animate from. */
       window.requestAnimationFrame(function () {
         window.requestAnimationFrame(function () { hero.classList.add('is-ready'); });
       });
     }
+  };
+
+  /* ------------------------------------------------------ Entrance loader */
+  var loader = document.querySelector('[data-loader]');
+
+  if (!loader || reducedMotion.matches) {
+    startHero();
+  } else {
+    /* Short enough not to be a toll gate, long enough not to flash and vanish.
+       MAX is the promise that nobody is ever held here. */
+    var MIN_MS = 600;
+    var MAX_MS = 2000;
+    var startedAt = Date.now();
+    var lifted = false;
+
+    var lift = function () {
+      if (lifted) { return; }
+      lifted = true;
+      loader.classList.add('is-done');
+      document.body.style.overflow = '';
+      startHero();
+    };
+
+    document.body.style.overflow = 'hidden';
+
+    var whenReady = function () {
+      window.setTimeout(lift, Math.max(0, MIN_MS - (Date.now() - startedAt)));
+    };
+
+    if (document.readyState === 'complete') { whenReady(); }
+    else { window.addEventListener('load', whenReady); }
+
+    /* Slow image? Dead connection? The page still opens. */
+    window.setTimeout(lift, MAX_MS);
   }
 
   /* ------------------------------------------------- Statistics count-up */
