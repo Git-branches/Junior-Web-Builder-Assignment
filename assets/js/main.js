@@ -4,19 +4,35 @@
 (function () {
   'use strict';
 
-  /* ---------------------------------------------- Header scroll transition */
-  var header = document.querySelector('[data-header]');
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  if (header) {
+  /* --------------------------- Scroll state: header treatment + back to top */
+  var header = document.querySelector('[data-header]');
+  var toTop = document.querySelector('[data-to-top]');
+
+  if (header || toTop) {
     var ticking = false;
-    var setStuck = function () {
-      header.classList.toggle('is-stuck', window.scrollY > 24);
+    var onScroll = function () {
+      var y = window.scrollY;
+      if (header) { header.classList.toggle('is-stuck', y > 24); }
+      /* Show the shortcut only once returning to the top is actually a chore. */
+      if (toTop) { toTop.classList.toggle('is-visible', y > window.innerHeight); }
       ticking = false;
     };
     window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; window.requestAnimationFrame(setStuck); }
+      if (!ticking) { ticking = true; window.requestAnimationFrame(onScroll); }
     }, { passive: true });
-    setStuck();
+    onScroll();
+  }
+
+  if (toTop) {
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+      /* Put keyboard users back at the start of the page, not adrift at the
+         bottom. preventScroll stops focus from racing the smooth scroll. */
+      var brand = document.querySelector('.brand');
+      if (brand) { brand.focus({ preventScroll: true }); }
+    });
   }
 
   /* ------------------------------------------------------ Mobile menu */
@@ -52,21 +68,69 @@
     });
   }
 
-  /* ------------------------------------------------- Scroll reveal */
-  var revealables = document.querySelectorAll('.reveal');
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* ------------------------------------------------------- Hero entrance */
+  /* Runs immediately rather than waiting on scroll — but after one painted
+     frame, so the browser has a "before" state to transition from. */
+  var hero = document.querySelector('[data-hero]');
 
-  if (!('IntersectionObserver' in window) || reduced) {
+  if (hero) {
+    if (reducedMotion.matches) {
+      hero.classList.add('is-ready');
+    } else {
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () { hero.classList.add('is-ready'); });
+      });
+    }
+  }
+
+  /* ------------------------------------------------- Statistics count-up */
+  /* The authored value is restored verbatim at the end, so the figure on screen
+     is always exactly the one in the markup — the animation never rounds it. */
+  var countUp = function (el) {
+    var target = parseFloat(el.getAttribute('data-count'));
+    var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    var prefix = el.getAttribute('data-prefix') || '';
+    var suffix = el.getAttribute('data-suffix') || '';
+    var authored = el.textContent;
+    var duration = 900;
+    var startedAt;
+
+    if (isNaN(target)) { return; }
+
+    var tick = function (now) {
+      if (!startedAt) { startedAt = now; }
+      var progress = Math.min((now - startedAt) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+
+      if (progress < 1) {
+        el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+        window.requestAnimationFrame(tick);
+      } else {
+        el.textContent = authored;
+      }
+    };
+
+    window.requestAnimationFrame(tick);
+  };
+
+  /* ------------------------------------------------------- Scroll reveal */
+  var revealables = document.querySelectorAll('.reveal');
+
+  if (!('IntersectionObserver' in window) || reducedMotion.matches) {
     Array.prototype.forEach.call(revealables, function (el) { el.classList.add('is-visible'); });
   } else {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) { return; }
+
+        entry.target.classList.add('is-visible');
+        Array.prototype.forEach.call(
+          entry.target.querySelectorAll('[data-count]'), countUp
+        );
+        /* Once each — revealing on every pass would turn the page into a toy. */
+        observer.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
 
     Array.prototype.forEach.call(revealables, function (el) { observer.observe(el); });
   }
@@ -154,22 +218,70 @@
 
   if (contactForm) {
     var status = contactForm.querySelector('[data-form-status]');
+    var submitBtn = contactForm.querySelector('button[type="submit"]');
+    var endpoint = (contactForm.getAttribute('action') || '').trim();
+
+    var setStatus = function (message, state) {
+      status.textContent = message;
+      status.setAttribute('data-state', state || '');
+    };
+
+    var flag = function (field, invalid) {
+      if (invalid) { field.setAttribute('aria-invalid', 'true'); }
+      else { field.removeAttribute('aria-invalid'); }
+    };
 
     contactForm.addEventListener('submit', function (event) {
       event.preventDefault();
 
-      var name = contactForm.elements.name.value.trim();
-      var email = contactForm.elements.email.value.trim();
+      var nameField = contactForm.elements.name;
+      var emailField = contactForm.elements.email;
+      var messageField = contactForm.elements.message;
+      var name = nameField.value.trim();
+      var email = emailField.value.trim();
+      var message = messageField.value.trim();
 
-      if (!name || !email) {
-        status.textContent = 'Please add your name and email so Marci can reply.';
-        (name ? contactForm.elements.email : contactForm.elements.name).focus();
+      flag(nameField, !name);
+      flag(emailField, !email);
+      flag(messageField, !message);
+
+      if (!name || !email || !message) {
+        setStatus('Please fill in your name, email and message so Marci can reply.', 'error');
+        (!name ? nameField : !email ? emailField : messageField).focus();
         return;
       }
 
-      status.textContent =
-        'Thanks, ' + name + '. This demo form is not wired to a mail service yet — ' +
-        'call (206) 919-6886 and Marci will get right back to you.';
+      /* Deliberately loose: just enough to catch a typo, not to police what a
+         valid address may look like. */
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        flag(emailField, true);
+        setStatus('That email address looks incomplete — could you check it?', 'error');
+        emailField.focus();
+        return;
+      }
+
+      if (!endpoint) {
+        setStatus('Thanks, ' + name + '. This form is not connected to a mail service yet — ' +
+                  'call (206) 919-6886 and Marci will get right back to you.', '');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      setStatus('Sending…', '');
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(contactForm),
+      }).then(function (response) {
+        if (!response.ok) { throw new Error('Bad response'); }
+        contactForm.reset();
+        setStatus('Thanks, ' + name + '. Your message is on its way — Marci will be in touch soon.', 'ok');
+      }).catch(function () {
+        setStatus('Sorry, that did not send. Please call (206) 919-6886 and Marci will help you directly.', 'error');
+      }).then(function () {
+        submitBtn.disabled = false;
+      });
     });
   }
 })();

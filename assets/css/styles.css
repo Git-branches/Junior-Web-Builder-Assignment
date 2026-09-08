@@ -37,8 +37,17 @@
   --shell:   80rem;                              /* 1280px */
   --section: clamp(4.5rem, 10vw, 9rem);
   --header-h: 68px;
+  --badge: 2.75rem;              /* circular icon badge, contact section */
 
-  --ease: cubic-bezier(.22, .61, .36, 1);
+  /* Motion — one language for the whole page. Change it here, not per section. */
+  --ease:        cubic-bezier(.22, .61, .36, 1);
+  --reveal-dist: 30px;
+  --reveal-dur:  620ms;
+  --stagger:     90ms;
+  --hover-dur:   500ms;
+  --ui-dur:      250ms;
+  --zoom:        1.02;    /* image hover */
+  --zoom-in:     1.03;    /* image entrance */
 }
 
 @media (min-width: 60em) { :root { --header-h: 88px; } }
@@ -165,10 +174,14 @@ section { position: relative; }
   text-decoration: none;
   cursor: pointer;
   background: none;
-  transition: background-color .25s var(--ease), color .25s var(--ease),
-              border-color .25s var(--ease), transform .25s var(--ease);
+  transition: background-color var(--ui-dur) var(--ease), color var(--ui-dur) var(--ease),
+              border-color var(--ui-dur) var(--ease), transform var(--ui-dur) var(--ease),
+              box-shadow var(--ui-dur) var(--ease);
 }
-.btn:active { transform: translateY(1px); }
+/* A 1px lift and a shallow press — felt more than seen. */
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(25, 24, 22, .14); }
+.btn:active { transform: translateY(0) scale(.985); box-shadow: none; }
+.btn:disabled:hover { transform: none; box-shadow: none; }
 
 .btn--solid { background: var(--olive); color: var(--ivory); border-color: var(--olive); }
 .btn--solid:hover { background: var(--charcoal); border-color: var(--charcoal); }
@@ -178,6 +191,7 @@ section { position: relative; }
 
 .btn--sm { min-height: 44px; padding: .65rem 1.35rem; font-size: .6875rem; }
 .btn--block { width: 100%; }
+.btn--arrow::after { content: "\2192"; font-size: 1rem; letter-spacing: 0; }
 
 .link-arrow {
   display: inline-flex;
@@ -495,6 +509,8 @@ section { position: relative; }
   line-height: 1;
   letter-spacing: -.01em;
   color: var(--ivory);
+  /* Fixed-width digits so a counting number cannot jitter its own layout. */
+  font-variant-numeric: tabular-nums;
 }
 
 .stats__note {
@@ -536,9 +552,9 @@ section { position: relative; }
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  transition: transform .7s var(--ease);
+  transition: transform var(--hover-dur) var(--ease);
 }
-.path:hover .path__media img { transform: scale(1.045); }
+.path:hover .path__media img { transform: scale(var(--zoom)); }
 
 .path__index {
   display: flex;
@@ -727,9 +743,10 @@ section { position: relative; }
   height: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
-  transition: transform .8s var(--ease);
+  transition: transform var(--hover-dur) var(--ease);
 }
-.gallery__btn:hover img { transform: scale(1.05); }
+.gallery__btn:hover img,
+.gallery__btn:focus-visible img { transform: scale(var(--zoom)); }
 
 .gallery__cap {
   position: absolute;
@@ -751,6 +768,35 @@ section { position: relative; }
   .gallery__item--wide { grid-column: span 2; }
   .gallery__item--wide .gallery__btn img { aspect-ratio: 2 / 1; }
 }
+
+/* ----------------------------------------------------------- BACK TO TOP */
+/* Square-cornered like every other control here — a lone circle would be the
+   only rounded thing on the page. */
+.to-top {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vw, 2.5rem);
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--charcoal);
+  background: var(--charcoal);
+  color: var(--ivory);
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(25, 24, 22, .22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity .3s var(--ease), transform .3s var(--ease), visibility .3s,
+              background-color .25s var(--ease), border-color .25s var(--ease);
+}
+.to-top.is-visible { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { background: var(--olive); border-color: var(--olive); }
+.to-top svg { width: 18px; height: 18px; display: block; }
 
 /* ------------------------------------------------------------- LIGHTBOX */
 .lightbox {
@@ -830,9 +876,9 @@ section { position: relative; }
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  transition: transform .7s var(--ease);
+  transition: transform var(--hover-dur) var(--ease);
 }
-.service:hover .service__media img { transform: scale(1.04); }
+.service:hover .service__media img { transform: scale(var(--zoom)); }
 .service__index {
   margin: 0 0 1rem;
   font-family: var(--serif);
@@ -911,32 +957,69 @@ section { position: relative; }
   color: rgba(246, 242, 236, .82);
 }
 .contact .section-title { color: var(--ivory); }
-.contact .eyebrow { color: var(--taupe); }
+.contact .eyebrow { color: var(--taupe); display: flex; align-items: center; gap: 1rem; }
+.contact .eyebrow::after {
+  content: "";
+  flex: 0 0 3rem;
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
 .contact .section-lede { color: rgba(246, 242, 236, .72); }
 
 .contact__head { max-width: 44rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
 
 .contact__grid { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); }
 
-.contact__photo { margin-bottom: 2.25rem; overflow: hidden; }
-.contact__photo img {
+.contact__map {
+  display: block;
   width: 100%;
   aspect-ratio: 16 / 10;
-  object-fit: cover;
-  object-position: 50% 35%;
+  min-height: 300px;
+  margin-top: 2.25rem;
+  border: 1px solid var(--line-dark);
+  background: var(--charcoal-alt);
 }
 
 .info { margin: 0; display: grid; gap: 0; border-top: 1px solid var(--line-dark); }
-.info__row { padding: 1.25rem 0; border-bottom: 1px solid var(--line-dark); }
+.info__row { padding: 1.4rem 0; border-bottom: 1px solid var(--line-dark); }
 .info__row dt {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
   font-size: .625rem;
   font-weight: 600;
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--taupe);
-  margin-bottom: .5rem;
+  margin-bottom: .55rem;
 }
-.info__row dd { margin: 0; font-size: .9375rem; line-height: 1.7; }
+/* Values line up under the label text — but only once the icon gutter can be
+   spared. On the narrowest screens it costs a fifth of the line. */
+.info__row dd {
+  margin: 0;
+  font-size: .9375rem;
+  line-height: 1.7;
+}
+@media (min-width: 30em) {
+  .info__row dd { padding-left: calc(var(--badge) + .9rem); }
+}
+
+/* Shared circular badge for the contact rows and the form header. */
+.info__icon,
+.form__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--badge);
+  height: var(--badge);
+  border: 1px solid var(--line-dark);
+  border-radius: 50%;
+  color: var(--taupe);
+}
+.info__icon .ico,
+.form__icon .ico { width: 17px; height: 17px; }
 .info__strong {
   font-family: var(--serif);
   font-size: 1.75rem;
@@ -953,6 +1036,26 @@ section { position: relative; }
 .contact .link-arrow:hover { color: var(--taupe); border-color: var(--taupe); }
 
 .form { display: grid; gap: 1.25rem; }
+
+/* Gives the panel an opening line instead of starting cold on a bare field. */
+.form__head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: .25rem;
+}
+.form__title {
+  margin: 0 0 .3rem;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--ivory);
+}
+.form__note { margin: 0; font-size: .875rem; color: rgba(246, 242, 236, .62); }
+
+/* Tinted to the same family as the validation messages, so the mark and the
+   error it predicts read as one system. */
+.req { color: #dda6a0; }
 .contact .field label { color: rgba(246, 242, 236, .72); }
 .contact .field input,
 .contact .field textarea {
@@ -976,19 +1079,36 @@ section { position: relative; }
   margin: 0;
   min-height: 1.25rem;
   font-size: .875rem;
+  line-height: 1.6;
   color: var(--taupe);
 }
+/* Muted enough to sit in the palette, separated enough to read at a glance. */
+.form__status[data-state="ok"] { color: #a7c0a0; }
+.form__status[data-state="error"] { color: #dda6a0; }
+
+.contact .field [aria-invalid="true"],
+.contact .field [aria-invalid="true"]:hover { border-color: #dda6a0; }
+
+.btn:disabled { opacity: .55; cursor: progress; }
+.contact .btn--solid:disabled:hover { background: var(--taupe); border-color: var(--taupe); }
 
 @media (min-width: 56em) {
-  .contact__grid { grid-template-columns: 1fr 1fr; column-gap: clamp(3rem, 7vw, 6rem); }
-  /* The form is naturally shorter than the photo-plus-details column, so it is
-     framed and centred against it rather than left hanging from the top. */
+  /* Both columns start on the same line — a floating, vertically centred panel
+     reads as an accident rather than a decision. */
+  .contact__grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(3rem, 7vw, 6rem);
+    align-items: start;
+  }
   .contact__form-wrap {
-    align-self: center;
     padding: clamp(1.75rem, 3vw, 2.5rem);
     border: 1px solid var(--line-dark);
     background: rgba(246, 242, 236, .03);
   }
+  /* The form panel now opens with its own header, so the details column starts
+     clean at the top rather than being padded to chase a bare field label. */
+  .contact__details .info { border-top: 0; }
+  .contact__details .info__row:first-child { padding-top: 0; }
 }
 
 /* ------------------------------------------------------------- 14 · FOOTER */
@@ -1022,6 +1142,24 @@ section { position: relative; }
   margin: 0 0 1rem;
 }
 .footer__nav li + li, .footer__social li + li { margin-top: .6rem; }
+
+/* Icons reinforce the labels rather than replace them, so the meaning never
+   rests on the glyph alone. */
+.ico {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.f-item { display: flex; align-items: flex-start; gap: .625rem; }
+.f-item .ico { margin-top: .28em; color: var(--taupe); }
+.footer__social a { display: inline-flex; align-items: center; gap: .625rem; }
+.footer__social .ico { color: var(--taupe); transition: color .2s var(--ease); }
+.footer__social a:hover .ico { color: var(--ivory); }
 .footer a { text-decoration: none; transition: color .2s var(--ease); }
 .footer a:hover { color: var(--ivory); }
 .footer__contact p { margin-bottom: .75rem; line-height: 1.7; }
@@ -1061,23 +1199,70 @@ section { position: relative; }
 }
 
 /* ------------------------------------------------------------- 15 · MOTION */
+/* Everything below animates only opacity and transform — never width, height
+   or offsets — so nothing reflows mid-animation. */
+
+/* --- Scroll reveal ------------------------------------------------------- */
 .js .reveal {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transform: translateY(var(--reveal-dist));
+  transition: opacity var(--reveal-dur) var(--ease),
+              transform var(--reveal-dur) var(--ease);
 }
 .js .reveal.is-visible { opacity: 1; transform: none; }
 
-/* Stagger siblings just enough to feel considered, never choreographed. */
-.reveal:nth-child(2) { transition-delay: .06s; }
-.reveal:nth-child(3) { transition-delay: .12s; }
-.reveal:nth-child(4) { transition-delay: .18s; }
+/* Images that enter on their own settle out of a slight push-in. Kept off any
+   image that also zooms on hover, so the two never fight over `transform`. */
+.js .reveal--zoom img {
+  transform: scale(var(--zoom-in));
+  transition: transform 900ms var(--ease);
+}
+.js .reveal--zoom.is-visible img { transform: none; }
 
+/* --- Stagger ------------------------------------------------------------- */
+/* Opt in per group. Delays are short by design: content must never feel
+   withheld, only sequenced. */
+.js .stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.js .stagger > .reveal:nth-child(2) { transition-delay: calc(var(--stagger) * 1); }
+.js .stagger > .reveal:nth-child(3) { transition-delay: calc(var(--stagger) * 2); }
+.js .stagger > .reveal:nth-child(4) { transition-delay: calc(var(--stagger) * 3); }
+.js .stagger > .reveal:nth-child(5) { transition-delay: calc(var(--stagger) * 4); }
+.js .stagger > .reveal:nth-child(6) { transition-delay: calc(var(--stagger) * 5); }
+.js .stagger > .reveal:nth-child(7) { transition-delay: calc(var(--stagger) * 6); }
+.js .stagger > .reveal:nth-child(8) { transition-delay: calc(var(--stagger) * 7); }
+
+/* --- Hero entrance ------------------------------------------------------- */
+/* Runs on load rather than on scroll, so the first thing a visitor sees is a
+   sequence rather than five things arriving at once. */
+.js .hero-in {
+  opacity: 0;
+  transform: translateY(var(--reveal-dist));
+  transition: opacity var(--reveal-dur) var(--ease),
+              transform var(--reveal-dur) var(--ease);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.js .hero.is-ready .hero-in { opacity: 1; transform: none; }
+
+/* The photograph fades and settles; it does not travel. */
+.js .hero-in--media { transform: none; }
+.js .hero-in--media img {
+  transform: scale(var(--zoom-in));
+  transition: transform 1000ms var(--ease);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.js .hero.is-ready .hero-in--media img { transform: none; }
+
+/* --- Reduced motion ------------------------------------------------------ */
+/* Nothing here is load-bearing: strip the motion and the page is unchanged. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: .001ms !important;
     transition-duration: .001ms !important;
+    transition-delay: 0ms !important;
   }
-  .js .reveal { opacity: 1; transform: none; }
+  .js .reveal,
+  .js .hero-in { opacity: 1; transform: none; }
+  .js .reveal--zoom img,
+  .js .hero-in--media img { transform: none; }
 }

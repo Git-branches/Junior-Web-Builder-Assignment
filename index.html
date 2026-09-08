@@ -61,26 +61,26 @@
 <main id="main">
 
   <!-- ========================================================== 02 · HERO -->
-  <section class="hero" aria-labelledby="hero-title">
+  <section class="hero" data-hero aria-labelledby="hero-title">
     <div class="shell hero__inner">
 
       <div class="hero__copy">
-        <p class="eyebrow reveal">Pahrump &middot; Nevada</p>
-        <h1 class="hero__title reveal" id="hero-title">
+        <p class="eyebrow hero-in" style="--i:0">Pahrump &middot; Nevada</p>
+        <h1 class="hero__title hero-in" style="--i:1" id="hero-title">
           Find a place<br>you&rsquo;ll love to<br>call home.
         </h1>
-        <p class="hero__lede reveal">
+        <p class="hero__lede hero-in" style="--i:2">
           Marci Metzger has been helping buyers and sellers since 1995 &mdash; nearly three decades
           of market experience, now working for you across Pahrump and Southern Nevada.
           Nobody knows this market like we do.
         </p>
-        <div class="hero__actions reveal">
+        <div class="hero__actions hero-in" style="--i:3">
           <a class="btn btn--solid" href="#homes">Explore Homes</a>
           <a class="btn btn--line" href="#contact">Work with Marci</a>
         </div>
       </div>
 
-      <figure class="hero__media reveal">
+      <figure class="hero__media hero-in hero-in--media" style="--i:4">
         <img src="assets/img/hero-desert-home.jpg" width="1600" height="1067"
              alt="Contemporary desert home at sunset with an infinity pool and covered terrace"
              fetchpriority="high" decoding="async">
@@ -101,18 +101,22 @@
         Trusted experience.<br>Local knowledge.<br>Personal service.
       </h2>
 
-      <dl class="stats__grid">
+      <!-- Final values are in the markup, so they are correct before any script
+           runs. The count-up only replays what is already there. 1995 is a year,
+           not a quantity, so it reveals rather than counts. -->
+      <dl class="stats__grid stagger">
         <div class="stat reveal">
           <dt class="stat__label">In real estate since</dt>
           <dd class="stat__value">1995</dd>
         </div>
         <div class="stat reveal">
           <dt class="stat__label">Closed in sales, 2021</dt>
-          <dd class="stat__value">$28.5M</dd>
+          <dd class="stat__value" data-count="28.5" data-decimals="1"
+              data-prefix="$" data-suffix="M">$28.5M</dd>
         </div>
         <div class="stat reveal">
           <dt class="stat__label">Clients helped in 2021</dt>
-          <dd class="stat__value">~90</dd>
+          <dd class="stat__value" data-count="90">90</dd>
         </div>
       </dl>
 
@@ -127,17 +131,17 @@
   <section class="paths" id="paths" aria-labelledby="paths-title">
     <div class="shell">
 
-      <div class="section-head reveal">
-        <p class="eyebrow">Where would you like to start?</p>
-        <h2 class="section-title" id="paths-title">Buying or selling?</h2>
-        <p class="section-lede">
+      <div class="section-head stagger">
+        <p class="eyebrow reveal">Where would you like to start?</p>
+        <h2 class="section-title reveal" id="paths-title">Buying or selling?</h2>
+        <p class="section-lede reveal">
           Nervous about your property adventure? Don&rsquo;t be. Whether you&rsquo;re getting ready to buy
           or sell, looking at investment properties, or just curious about the market, you get
           a pro at your service from the first conversation to closing day.
         </p>
       </div>
 
-      <div class="paths__grid">
+      <div class="paths__grid stagger">
 
         <article class="path reveal">
           <figure class="path__media">
@@ -310,7 +314,7 @@
   <section class="place" id="pahrump" aria-labelledby="place-title">
     <div class="shell">
 
-      <div class="place__head">
+      <div class="place__head stagger">
         <div class="reveal">
           <p class="eyebrow">Photo gallery</p>
           <h2 class="section-title" id="place-title">Life in Pahrump</h2>
@@ -331,9 +335,9 @@
         </div>
       </div>
 
-      <ul class="gallery reveal" data-gallery>
+      <ul class="gallery stagger" data-gallery>
 
-        <li class="gallery__item gallery__item--lead">
+        <li class="gallery__item gallery__item--lead reveal">
           <button class="gallery__btn" type="button"
                   data-caption="The Mountain Falls clubhouse, resort pool and golf course, looking north to the mountains">
             <img src="assets/img/listing-roseworthy-1.jpg" width="1024" height="682" loading="lazy" decoding="async"
@@ -342,7 +346,7 @@
           </button>
         </li>
 
-        <li class="gallery__item">
+        <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Homes backing straight onto the fairway, with the valley beyond">
             <img src="assets/img/listing-beacon-ridge-1.jpg" width="900" height="600" loading="lazy" decoding="async"
@@ -351,7 +355,7 @@
           </button>
         </li>
 
-        <li class="gallery__item">
+        <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Tennis and pickleball courts beside the clubhouse">
             <img src="assets/img/listing-beacon-ridge-2.jpg" width="900" height="600" loading="lazy" decoding="async"
@@ -360,7 +364,7 @@
           </button>
         </li>
 
-        <li class="gallery__item">
+        <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Snow on the range above the valley in winter">
             <img src="assets/img/listing-beacon-ridge-3.jpg" width="900" height="599" loading="lazy" decoding="async"
@@ -369,7 +373,7 @@
           </button>
         </li>
 
-        <li class="gallery__item">
+        <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="A backyard pool and spa, with the golf course just past the fence">
             <img src="assets/img/listing-ailanto-3.jpg" width="900" height="599" loading="lazy" decoding="async"
@@ -378,7 +382,16 @@
           </button>
         </li>
 
-        <li class="gallery__item gallery__item--wide">
+        <li class="gallery__item gallery__item--wide reveal">
+          <button class="gallery__btn" type="button"
+                  data-caption="The same golf course pond from ground level, looking to the mountains">
+            <img src="assets/img/pahrump-pond.jpg" width="1400" height="929" loading="lazy" decoding="async"
+                 alt="Golf course pond with fountains, framed by pines and the mountains above Pahrump">
+            <span class="gallery__cap">Mountain Falls</span>
+          </button>
+        </li>
+
+        <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Desert landscaping framed by a full-height window wall">
             <img src="assets/img/listing-ailanto-1.jpg" width="900" height="599" loading="lazy" decoding="async"
@@ -387,7 +400,7 @@
           </button>
         </li>
 
-        <li class="gallery__item gallery__item--wide">
+        <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Quiet streets, wide lots and the Spring Mountains on the skyline">
             <img src="assets/img/listing-ailanto-2.jpg" width="900" height="599" loading="lazy" decoding="async"
@@ -405,16 +418,16 @@
   <section class="services" id="services" aria-labelledby="services-title">
     <div class="shell">
 
-      <div class="section-head section-head--center reveal">
-        <p class="eyebrow">Our services</p>
-        <h2 class="section-title" id="services-title">Real estate, done right.</h2>
-        <p class="section-lede">
+      <div class="section-head section-head--center stagger">
+        <p class="eyebrow reveal">Our services</p>
+        <h2 class="section-title reveal" id="services-title">Real estate, done right.</h2>
+        <p class="section-lede reveal">
           Commercial and residential, large or small &mdash; our team makes sure you get the best
           experience possible.
         </p>
       </div>
 
-      <div class="services__grid">
+      <div class="services__grid stagger">
 
         <article class="service reveal">
           <figure class="service__media">
@@ -469,12 +482,12 @@
   <section class="about" id="about" aria-labelledby="about-title">
     <div class="shell about__inner">
 
-      <figure class="about__portrait reveal">
+      <figure class="about__portrait reveal reveal--zoom">
         <img src="assets/img/marci-portrait.jpg" width="1100" height="1651" loading="lazy" decoding="async"
              alt="Portrait of Marci Metzger, REALTOR with The Ridge Realty Group">
       </figure>
 
-      <div class="about__copy">
+      <div class="about__copy stagger">
         <p class="eyebrow reveal">Realtor for nearly 3 decades</p>
         <h2 class="section-title reveal" id="about-title">Meet Marci Metzger</h2>
 
@@ -507,10 +520,10 @@
   <section class="contact" id="contact" aria-labelledby="contact-title">
     <div class="shell">
 
-      <div class="contact__head reveal">
-        <p class="eyebrow">Let&rsquo;s talk</p>
-        <h2 class="section-title" id="contact-title">Ready for your next move?</h2>
-        <p class="section-lede">
+      <div class="contact__head stagger">
+        <p class="eyebrow reveal">Let&rsquo;s talk</p>
+        <h2 class="section-title reveal" id="contact-title">Ready for your next move?</h2>
+        <p class="section-lede reveal">
           Whether you&rsquo;re buying, selling, or just exploring the Pahrump market, a short conversation
           is the easiest place to start. Call the office, stop by, or send a message.
         </p>
@@ -519,52 +532,103 @@
       <div class="contact__grid">
 
         <div class="contact__details reveal">
-          <figure class="contact__photo">
-            <img src="assets/img/pahrump-pond.jpg" width="1400" height="929" loading="lazy" decoding="async"
-                 alt="Golf course pond with fountains, framed by pines and the mountains above Pahrump">
-          </figure>
-
           <dl class="info">
             <div class="info__row">
-              <dt>Call or text</dt>
+              <dt>
+                <span class="info__icon" aria-hidden="true">
+                  <svg class="ico" viewBox="0 0 24 24" focusable="false">
+                    <path d="M6.5 3h3L11 7 9 8.5a12 12 0 0 0 5.5 5.5L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/>
+                  </svg>
+                </span>
+                Call or text
+              </dt>
               <dd><a class="info__strong" href="tel:+12069196886">(206) 919-6886</a></dd>
             </div>
+
             <div class="info__row">
-              <dt>Office</dt>
+              <dt>
+                <span class="info__icon" aria-hidden="true">
+                  <svg class="ico" viewBox="0 0 24 24" focusable="false">
+                    <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/>
+                    <circle cx="12" cy="10" r="2.5"/>
+                  </svg>
+                </span>
+                Office
+              </dt>
               <dd>
                 3190 HW-160, Suite F<br>
                 Pahrump, Nevada 89048, United States<br>
                 <a class="link-arrow link-arrow--sm"
-                   href="https://www.google.com/maps/search/?api=1&amp;query=3190+HW-160+Suite+F+Pahrump+NV+89048"
+                   href="https://www.google.com/maps/search/?api=1&amp;query=3190+S+Highway+160,+Pahrump,+NV+89048"
                    target="_blank" rel="noopener">Get directions</a>
               </dd>
             </div>
+
             <div class="info__row">
-              <dt>Office hours</dt>
+              <dt>
+                <span class="info__icon" aria-hidden="true">
+                  <svg class="ico" viewBox="0 0 24 24" focusable="false">
+                    <circle cx="12" cy="12" r="8.5"/>
+                    <path d="M12 7.5V12l3 2"/>
+                  </svg>
+                </span>
+                Office hours
+              </dt>
               <dd>
                 Open daily, 8:00 am &ndash; 7:00 pm<br>
                 <span class="info__muted">Appointments outside office hours available upon request. Just call!</span>
               </dd>
             </div>
           </dl>
+
+          <!-- Keyless Google Maps embed, so there is no API key to leak or expire.
+               The site writes the address as "HW-160"; Google does not geocode that
+               token and lands elsewhere in Pahrump, so the query spells out State
+               Route 160. Sits below the details so the phone number stays the first
+               thing in the column. -->
+          <iframe class="contact__map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                  title="Map showing Marci Metzger's office at 3190 S Highway 160, Suite F, Pahrump, Nevada"
+                  src="https://maps.google.com/maps?q=3190+S+Highway+160,+Pahrump,+NV+89048&amp;z=15&amp;output=embed"></iframe>
         </div>
 
         <div class="contact__form-wrap reveal">
-          <form class="form" data-contact-form novalidate>
+          <!-- To make this live: paste your form endpoint into action=""
+               (e.g. a free Formspree URL). Leave it empty and the form stays in
+               demo mode, telling visitors to call instead of failing silently.
+               Using action= rather than a data- attribute means it still posts
+               without JavaScript. -->
+          <form class="form" data-contact-form action="" method="post" novalidate>
+
+            <div class="form__head">
+              <span class="form__icon" aria-hidden="true">
+                <svg class="ico" viewBox="0 0 24 24" focusable="false">
+                  <rect x="3" y="5.5" width="18" height="13" rx="1.5"/>
+                  <path d="m3.6 6.6 8.4 6 8.4-6"/>
+                </svg>
+              </span>
+              <div>
+                <h3 class="form__title">Send a message</h3>
+                <p class="form__note">Tell us a little about what you&rsquo;re looking for.</p>
+              </div>
+            </div>
+
             <div class="field">
-              <label for="c-name">Name</label>
-              <input type="text" id="c-name" name="name" autocomplete="name" required>
+              <label for="c-name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="c-name" name="name" autocomplete="name"
+                     placeholder="Your full name" required>
             </div>
             <div class="field">
-              <label for="c-email">Email</label>
-              <input type="email" id="c-email" name="email" autocomplete="email" required>
+              <label for="c-email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input type="email" id="c-email" name="email" autocomplete="email"
+                     placeholder="you@example.com" required>
             </div>
             <div class="field">
-              <label for="c-message">Message</label>
+              <label for="c-message">Message <span class="req" aria-hidden="true">*</span></label>
               <textarea id="c-message" name="message" rows="5"
-                        placeholder="Buying, selling, or just looking around?"></textarea>
+                        placeholder="How can we help you?" required></textarea>
             </div>
-            <button class="btn btn--solid btn--block" type="submit">Send Message</button>
+
+            <button class="btn btn--solid btn--block btn--arrow" type="submit">Send Message</button>
             <p class="form__status" data-form-status role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -598,18 +662,71 @@
 
       <div class="footer__contact">
         <h2 class="footer__heading">Contact</h2>
-        <p><a href="tel:+12069196886">(206) 919-6886</a></p>
-        <p>3190 HW-160, Suite F<br>Pahrump, Nevada 89048</p>
-        <p class="footer__hours">Open daily, 8:00 am &ndash; 7:00 pm</p>
+
+        <p class="f-item">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6.5 3h3L11 7 9 8.5a12 12 0 0 0 5.5 5.5L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/>
+          </svg>
+          <a href="tel:+12069196886">(206) 919-6886</a>
+        </p>
+
+        <p class="f-item">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/>
+            <circle cx="12" cy="10" r="2.5"/>
+          </svg>
+          <span>3190 HW-160, Suite F<br>Pahrump, Nevada 89048</span>
+        </p>
+
+        <p class="f-item footer__hours">
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="8.5"/>
+            <path d="M12 7.5V12l3 2"/>
+          </svg>
+          <span>Open daily, 8:00 am &ndash; 7:00 pm</span>
+        </p>
       </div>
 
       <div class="footer__social">
         <h2 class="footer__heading">Follow</h2>
         <ul>
-          <li><a href="https://www.facebook.com/MarciHomes/" target="_blank" rel="noopener">Facebook</a></li>
-          <li><a href="https://www.instagram.com/marcimetzger_theridge/" target="_blank" rel="noopener">Instagram</a></li>
-          <li><a href="https://www.linkedin.com/in/marci-metzger-30642496/" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li><a href="https://www.yelp.com/biz/xr3yQN_m2SgO0R_7S6p62w" target="_blank" rel="noopener">Yelp</a></li>
+          <li>
+            <a href="https://www.facebook.com/MarciHomes/" target="_blank" rel="noopener">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="8.5"/>
+                <path d="M13.7 8.7h-1.1a1.5 1.5 0 0 0-1.5 1.5v6.3M10 12.4h3.2"/>
+              </svg>
+              Facebook
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/marcimetzger_theridge/" target="_blank" rel="noopener">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="16.9" cy="7.1" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+              Instagram
+            </a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/in/marci-metzger-30642496/" target="_blank" rel="noopener">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/>
+                <circle cx="8" cy="7.6" r="1" fill="currentColor" stroke="none"/>
+                <path d="M8 10.6v6M12.2 16.6v-3.1a2.2 2.2 0 0 1 4.4 0v3.1M12.2 10.6v6"/>
+              </svg>
+              LinkedIn
+            </a>
+          </li>
+          <li>
+            <a href="https://www.yelp.com/biz/xr3yQN_m2SgO0R_7S6p62w" target="_blank" rel="noopener">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m12 4.6 2.3 4.6 5.1.8-3.7 3.6.9 5.1-4.6-2.4-4.6 2.4.9-5.1L4.6 10l5.1-.8z"/>
+              </svg>
+              Yelp
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -628,6 +745,15 @@
 
   </div>
 </footer>
+
+<!-- Appears once you are a screen deep; hidden by default so it never shows
+     without the script that controls it. -->
+<button class="to-top" type="button" data-to-top aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M12 19V5M5 12l7-7 7 7" fill="none" stroke="currentColor"
+          stroke-width="1.6" stroke-linecap="square"/>
+  </svg>
+</button>
 
 <!-- Gallery lightbox. Inert until a gallery photo is opened; the gallery works
      as a plain grid of images without it. -->

@@ -31,7 +31,7 @@ or statistics that the source doesn't state.
 | Life in Pahrump | Marci's own words from the About page, quoted and attributed |
 | Services | The three "Our Services" blocks, split so each says something different |
 | About | The About-page biography, condensed |
-| Contact / footer | Phone, office address, hours, socials, copyright line |
+| Contact / footer | Phone, office address, hours, map, socials, copyright line |
 
 **Two honest notes about the numbers.** "Nearly 90 clients" is shown as `~90`
 rather than `90`, because rounding up would overstate it. And the experience
@@ -64,6 +64,13 @@ good; its hierarchy is what buries it.
   an offset buyer panel, a floating search panel, hairline rules instead of
   boxes. Only the contact form is framed, and only to balance its column.
 
+**One gotcha worth recording.** The site writes its address as "3190 HW-160".
+Google does not geocode that token — it silently lands on Desert View Hospital,
+a different part of Pahrump. The map and the directions link therefore spell out
+`3190 S Highway 160` and pin explicit coordinates, while the address stays
+written as the client writes it. Worth checking any embedded map against the
+original rather than assuming the address string resolves.
+
 ## Things that are presentational, and say so
 
 There is no MLS back end and no mail service behind a static page, so nothing
@@ -79,6 +86,37 @@ pretends otherwise:
   number. The phone number is a working `tel:` link throughout, and the address
   links to Google Maps.
 
+## Motion
+
+One system, driven by six tokens at the top of `styles.css` — `--ease`,
+`--reveal-dist`, `--reveal-dur`, `--stagger`, `--hover-dur`, `--zoom`. Change
+the feel of the whole page there rather than section by section.
+
+- **Hero** animates on load, not on scroll: eyebrow → headline → copy → buttons
+  → photograph, 90ms apart. The photograph settles out of a 1.03 scale instead
+  of sliding, so it reads as a photograph rather than a card. Nothing blocks
+  interaction — the page is usable from the first frame.
+- **Everything else** reveals on scroll through one `IntersectionObserver`:
+  30px up, 620ms, once each, unobserved as soon as it fires. Section headings
+  reveal progressively (eyebrow, then heading, then description) so the eye is
+  led in reading order rather than hit with the whole block.
+- **Stagger** is opt-in per group via a `.stagger` class; only stats, the two
+  pathways, services and the gallery use it.
+- **Statistics** count up on entry, but only where counting means something.
+  1995 is a year, not a quantity, so it reveals instead. The authored string is
+  restored verbatim at the end of every count, so the number on screen is always
+  exactly the number in the markup — the animation can never round it.
+- **Only `opacity` and `transform`** are animated, never width, height or
+  offsets, so nothing reflows mid-animation. Stat figures use `tabular-nums` so
+  a counting number cannot shift its own layout.
+- **Entrance scale is kept off any image that also zooms on hover**, so the two
+  never fight over `transform`.
+
+Under `prefers-reduced-motion: reduce` the reveals resolve to their final state,
+transitions and delays collapse, smooth scrolling reverts to instant, and the
+count-up is skipped entirely. Verified by emulating the preference: nothing is
+left hidden and the figures still read 1995 / $28.5M / 90.
+
 ## Accessibility & performance
 
 - Semantic landmarks, one `h1`, ordered headings, skip link, visible focus rings
@@ -90,6 +128,10 @@ pretends otherwise:
 - Animation is a single fade-and-rise via `IntersectionObserver`. It is disabled
   under `prefers-reduced-motion`, and the reveal styles only apply once JS has
   confirmed it can undo them — with scripting off, nothing is hidden.
+- The back-to-top button appears only once you are a full screen down, and
+  returns focus to the top of the page rather than leaving keyboard users
+  stranded at the bottom. It honours `prefers-reduced-motion` by jumping instead
+  of gliding, and stays hidden if the script never runs.
 - The gallery lightbox is driven by real `<button>` elements, so it opens from
   the keyboard. Arrow keys move between photos, Escape closes, Tab stays inside
   the dialog, and closing returns focus to the photo you were viewing rather
