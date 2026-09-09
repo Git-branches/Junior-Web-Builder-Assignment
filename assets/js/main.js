@@ -42,6 +42,9 @@
   if (toggle && nav) {
     var setMenu = function (open) {
       nav.classList.toggle('is-open', open);
+      /* Solidify the bar too, so the ivory panel is not hanging off a
+         transparent strip with the hero photograph showing through it. */
+      if (header) { header.classList.toggle('is-menu-open', open); }
       toggle.setAttribute('aria-expanded', String(open));
       toggle.querySelector('.burger__label').textContent = open ? 'Close' : 'Menu';
     };

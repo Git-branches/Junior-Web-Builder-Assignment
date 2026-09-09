@@ -60,7 +60,16 @@ good; its hierarchy is what buries it.
 - **Type and colour.** Cormorant Garamond for editorial display, Inter for
   everything functional. Warm ivory, deep charcoal, taupe and a deep olive
   accent — five colours, no gradients, no rounded-card grid.
-- **Composition over components.** Full-bleed bands, an overlapping hero card,
+- **A full-bleed hero.** The photograph runs edge to edge with the headline
+  over it, and the header's type goes light while it sits on the image, handing
+  back to dark once you scroll. The overlay is load-bearing, not decoration:
+  text contrast over it is measured, not eyeballed (see below).
+- **A light credibility band.** With a dark photographic hero, a charcoal stats
+  band directly beneath it read as one continuous murk. It is now warm ivory —
+  the breath after the hero, and it makes the three figures the brightest thing
+  on the page.
+- **Composition over components.** Full-bleed bands, a contact card overlapping
+  Marci's portrait,
   an offset buyer panel, a floating search panel, hairline rules instead of
   boxes. Only the contact form is framed, and only to balance its column.
 
@@ -116,6 +125,14 @@ Under `prefers-reduced-motion: reduce` the reveals resolve to their final state,
 transitions and delays collapse, smooth scrolling reverts to instant, and the
 count-up is skipped entirely. Verified by emulating the preference: nothing is
 left hidden and the figures still read 1995 / $28.5M / 90.
+
+**Hero contrast is measured, not assumed.** The overlay that makes the hero copy
+legible was verified by hiding the text, screenshotting the backdrop, and
+sampling the worst-case pixel behind every element against WCAG. Nav 7.28:1,
+eyebrow 4.99:1, headline 4.23:1 (large text needs 3:1), lede 6.71:1, scroll cue
+8.28:1 — all pass. The scrim behind the header is doing real work: without it
+the nav measures 2.24:1 and fails. Anyone lightening that gradient should re-run
+the check rather than trust their eye.
 
 ## Accessibility & performance
 

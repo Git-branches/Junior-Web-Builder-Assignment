@@ -137,6 +137,15 @@ section { position: relative; }
   text-transform: uppercase;
   color: var(--taupe-ink);
 }
+/* Rule leading the label, as an opening flourish. */
+.eyebrow--lead { display: flex; align-items: center; gap: 1rem; }
+.eyebrow--lead::before {
+  content: "";
+  flex: 0 0 2.5rem;
+  height: 1px;
+  background: currentColor;
+  opacity: .6;
+}
 
 .section-title {
   font-size: clamp(2.1rem, 5.4vw, 3.6rem);
@@ -221,12 +230,24 @@ section { position: relative; }
   transition: background-color .35s var(--ease), border-color .35s var(--ease),
               box-shadow .35s var(--ease);
 }
-.header.is-stuck {
+/* Solid once scrolled — and also while the mobile menu is open, so the panel
+   does not hang off a transparent strip showing the photograph behind it. */
+.header.is-stuck,
+.header.is-menu-open {
   background: rgba(246, 242, 236, .94);
   backdrop-filter: saturate(140%) blur(10px);
   border-bottom-color: var(--line-soft);
   box-shadow: 0 1px 24px rgba(25, 24, 22, .06);
 }
+
+/* At the top the header sits on the hero photograph, so its type goes light.
+   Everything here transitions, so the handover on scroll is not a flicker. */
+.brand__name, .brand__group, .burger, .nav__link {
+  transition: color .35s var(--ease);
+}
+.header:not(.is-stuck):not(.is-menu-open) .brand__name { color: var(--ivory); }
+.header:not(.is-stuck):not(.is-menu-open) .brand__group { color: rgba(246, 242, 236, .72); }
+.header:not(.is-stuck):not(.is-menu-open) .burger { color: var(--ivory); }
 
 .header__inner {
   display: flex;
@@ -370,17 +391,49 @@ section { position: relative; }
   .nav__link:hover { color: var(--charcoal); }
   .nav__link:hover::after { transform: scaleX(1); }
   .nav__cta { margin-top: 0; }
+
+  /* Only from here up is the nav inline over the hero. Below this width it is
+     an ivory dropdown panel, where light links would vanish. */
+  .header:not(.is-stuck):not(.is-menu-open) .nav__link { color: rgba(246, 242, 236, .85); }
+  .header:not(.is-stuck):not(.is-menu-open) .nav__link:hover { color: var(--ivory); }
 }
 
 /* --------------------------------------------------------------- 06 · HERO */
-.hero { padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4.5rem)); }
+/* Full-bleed photograph with the copy laid over it. The overlay below is what
+   makes the text legible, so it is not decoration — do not lighten it without
+   re-checking contrast against the brightest part of the image. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: 90vh;
+  min-height: 90svh;
+}
+
+.hero__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+.hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 50%;
+}
+.hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+              rgba(18, 17, 15, .74) 0%,
+              rgba(18, 17, 15, .62) 45%,
+              rgba(18, 17, 15, .84) 100%);
+}
 
 .hero__inner {
   display: grid;
-  gap: clamp(2.5rem, 6vw, 4.5rem);
-  padding-bottom: var(--section);
-  align-items: center;
+  align-content: center;
+  padding-top: calc(var(--header-h) + clamp(1.5rem, 5vw, 3rem));
+  padding-bottom: clamp(5rem, 12vw, 7rem);
 }
+.hero__copy { max-width: 40rem; }
 
 /* Sized so the three authored lines stay three lines from 960px up — the
    longest ("you'll love to") is what sets the ceiling. */
@@ -392,10 +445,13 @@ section { position: relative; }
   margin-bottom: 1.75rem;
 }
 
+.hero .eyebrow { color: rgba(246, 242, 236, .78); }
+.hero__title { color: var(--ivory); }
+
 .hero__lede {
-  max-width: 34rem;
+  max-width: 33rem;
   font-size: clamp(1rem, 1.5vw, 1.0625rem);
-  color: var(--warm-700);
+  color: rgba(246, 242, 236, .88);
 }
 
 .hero__actions {
@@ -405,69 +461,66 @@ section { position: relative; }
   margin-top: 2rem;
 }
 
-.hero__media { position: relative; }
-.hero__media img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: 62% 60%;
+/* Outlined button sitting on a photograph rather than on ivory. */
+.hero .btn--line { color: var(--ivory); border-color: rgba(246, 242, 236, .45); }
+.hero .btn--line:hover {
+  background: var(--ivory);
+  border-color: var(--ivory);
+  color: var(--charcoal);
 }
 
-.hero__card {
+/* A real link to the next section, not just an ornament. */
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 3vw, 2rem);
+  transform: translateX(-50%);
   display: grid;
-  gap: .3rem;
-  padding: 1.25rem 1.5rem;
-  background: var(--ivory);
-  border: 1px solid var(--line-soft);
-}
-.hero__card-label {
+  justify-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
   font-size: .625rem;
   font-weight: 600;
-  letter-spacing: .2em;
+  letter-spacing: .22em;
   text-transform: uppercase;
-  color: var(--taupe-ink);
-}
-.hero__card-phone {
-  font-family: var(--serif);
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: .02em;
   text-decoration: none;
-  color: var(--charcoal);
-  transition: color .2s var(--ease);
+  color: rgba(246, 242, 236, .8);
+  transition: color var(--ui-dur) var(--ease);
 }
-.hero__card-phone:hover { color: var(--olive); }
-.hero__card-note { font-size: .8125rem; color: var(--warm-500); }
-
-@media (min-width: 48em) {
-  .hero__media img { aspect-ratio: 3 / 2; }
-}
+.hero__scroll svg { width: 16px; height: 16px; transition: transform var(--ui-dur) var(--ease); }
+.hero__scroll:hover { color: var(--ivory); }
+.hero__scroll:hover svg { transform: translateY(3px); }
 
 @media (min-width: 60em) {
   .hero__title { font-size: clamp(2.4rem, 5.2vw, 4.6rem); }
-  .hero__inner {
-    grid-template-columns: 1.1fr 1fr;
-    min-height: min(78vh, 42rem);
-  }
-  .hero__media img {
-    aspect-ratio: 4 / 5;
-    max-height: min(68vh, 40rem);
-    object-position: 58% 55%;
-  }
-  .hero__card {
-    position: absolute;
-    left: -2.5rem;
-    bottom: 2.5rem;
-    max-width: 17rem;
-    padding: 1.5rem 1.75rem;
-    box-shadow: 0 18px 44px rgba(25, 24, 22, .14);
+  .hero__bg img { object-position: 68% 50%; }
+  /* Weighted to the left, where the words are, so the photograph keeps its
+     light on the right. */
+  .hero__bg::after {
+    background:
+      /* Scrim behind the header. Without it the nav sits on bright sky at the
+         top right, where the left-weighted gradient does not reach — measured
+         at 1.13:1 before this layer was added. */
+      linear-gradient(to bottom,
+        rgba(18, 17, 15, .80) 0%,
+        rgba(18, 17, 15, .35) 14%,
+        rgba(18, 17, 15, 0) 26%),
+      linear-gradient(97deg,
+        rgba(18, 17, 15, .93) 0%,
+        rgba(18, 17, 15, .78) 32%,
+        rgba(18, 17, 15, .38) 60%,
+        rgba(18, 17, 15, .20) 100%),
+      linear-gradient(to top, rgba(18, 17, 15, .55) 0%, rgba(18, 17, 15, 0) 28%);
   }
 }
 
 /* -------------------------------------------------------------- 07 · STATS */
+/* Light on purpose. The hero is now a dark photograph, and a charcoal band
+   directly beneath it read as one continuous murk — this is the breath after
+   it, and it makes the three figures the brightest thing on the page. */
 .stats {
-  background: var(--charcoal);
-  color: var(--ivory);
+  background: var(--ivory-deep);
+  color: var(--ink);
   padding-block: clamp(3.5rem, 8vw, 6rem);
 }
 
@@ -476,7 +529,7 @@ section { position: relative; }
 .stats__statement {
   font-size: clamp(1.75rem, 4.2vw, 2.75rem);
   line-height: 1.14;
-  color: var(--ivory);
+  color: var(--charcoal);
   text-transform: uppercase;
   letter-spacing: .015em;
 }
@@ -485,21 +538,21 @@ section { position: relative; }
   display: grid;
   gap: 0;
   margin: 0;
-  border-top: 1px solid var(--line-dark);
+  border-top: 1px solid var(--line);
 }
 
 .stat {
   display: grid;
   gap: .5rem;
   padding: 1.75rem 0;
-  border-bottom: 1px solid var(--line-dark);
+  border-bottom: 1px solid var(--line);
 }
 .stat__label {
   font-size: .6875rem;
   font-weight: 600;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--taupe);
+  color: var(--taupe-ink);
 }
 .stat__value {
   margin: 0;
@@ -508,7 +561,7 @@ section { position: relative; }
   font-weight: 500;
   line-height: 1;
   letter-spacing: -.01em;
-  color: var(--ivory);
+  color: var(--charcoal);
   /* Fixed-width digits so a counting number cannot jitter its own layout. */
   font-variant-numeric: tabular-nums;
 }
@@ -516,13 +569,28 @@ section { position: relative; }
 .stats__note {
   max-width: 34rem;
   font-size: .9375rem;
-  color: rgba(246, 242, 236, .68);
+  color: var(--warm-700);
 }
 
 @media (min-width: 48em) {
-  .stats__grid { grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line-dark); }
-  .stat { border-bottom: 0; padding: 2rem 2rem 2rem 0; }
-  .stat + .stat { border-left: 1px solid var(--line-dark); padding-left: 2rem; }
+  /* Same gutter-drawn divider as the services row, so every column has an
+     identical content width. */
+  .stats__grid {
+    --col-gap: clamp(1.5rem, 4vw, 3rem);
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--col-gap);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat { position: relative; border-bottom: 0; padding: 2rem 0; }
+  .stat + .stat::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--col-gap) / -2);
+    width: 1px;
+    background: var(--line);
+  }
 }
 
 @media (min-width: 64em) {
@@ -903,14 +971,25 @@ section { position: relative; }
 .service__body { color: var(--warm-700); font-size: .9375rem; }
 
 @media (min-width: 56em) {
+  /* Dividers are drawn in the gutter rather than as padded borders. Padding on
+     one side of the first column and both sides of the rest made its content
+     box wider, so its 4:3 image rendered taller and pushed everything below it
+     out of line with the other two. */
   .services__grid {
+    --col-gap: clamp(2rem, 5vw, 4rem);
     grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--col-gap);
     border-bottom: 1px solid var(--line-soft);
   }
-  .service { border-bottom: 0; padding: 3rem clamp(1.5rem, 3vw, 2.5rem) 3rem 0; }
-  .service + .service {
-    border-left: 1px solid var(--line-soft);
-    padding-left: clamp(1.5rem, 3vw, 2.5rem);
+  .service { position: relative; border-bottom: 0; padding: 3rem 0; }
+  .service + .service::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--col-gap) / -2);
+    width: 1px;
+    background: var(--line-soft);
   }
 }
 
@@ -922,12 +1001,54 @@ section { position: relative; }
 /* Capped so the portrait stays a portrait on tablets instead of becoming a
    full-bleed slab above the copy. */
 .about__portrait { max-width: 26rem; }
+.about__portrait { position: relative; }
 .about__portrait img {
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: 50% 18%;
 }
+
+/* Below the photo by default; overlapped onto it once there is room. */
+.about__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--ivory);
+  border: 1px solid var(--line-soft);
+}
+.about__card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--badge);
+  height: var(--badge);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--taupe-ink);
+}
+.about__card-icon .ico { width: 17px; height: 17px; }
+.about__card-text { display: grid; gap: .25rem; }
+.about__card-label {
+  font-size: .625rem;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--taupe-ink);
+}
+.about__card-phone {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-decoration: none;
+  color: var(--charcoal);
+  transition: color var(--ui-dur) var(--ease);
+}
+.about__card-phone:hover { color: var(--olive); }
+.about__card-note { font-size: .8125rem; color: var(--warm-500); }
 
 .about__body { color: var(--warm-700); margin-top: 1.75rem; max-width: 34rem; }
 .about__body p { margin-bottom: 1.15em; }
@@ -948,6 +1069,16 @@ section { position: relative; }
   .about__inner { grid-template-columns: .85fr 1fr; column-gap: clamp(3rem, 7vw, 6rem); }
   .about__portrait { max-width: none; }
   .about__portrait img { aspect-ratio: 3 / 4; }
+
+  /* Overlaps the lower-right corner and breaks the frame slightly — the depth
+     is the point. Kept inside the column gap so it never collides with the bio. */
+  .about__card {
+    position: absolute;
+    right: clamp(-2.5rem, -2vw, -1rem);
+    bottom: 2rem;
+    max-width: 20rem;
+    box-shadow: 0 18px 44px rgba(25, 24, 22, .18);
+  }
 }
 
 /* ------------------------------------------------------------ 13 · CONTACT */
