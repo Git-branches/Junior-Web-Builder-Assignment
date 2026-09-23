@@ -6,6 +6,11 @@
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  /* Footer year stays current without yearly edits. Hardcoded year in markup
+     remains as the no-JS fallback. */
+  var yearEl = document.querySelector('[data-year]');
+  if (yearEl) { yearEl.textContent = String(new Date().getFullYear()); }
+
   /* --------------------------- Scroll state: header treatment + back to top */
   var header = document.querySelector('[data-header]');
   var toTop = document.querySelector('[data-to-top]');
