@@ -52,6 +52,8 @@
       if (header) { header.classList.toggle('is-menu-open', open); }
       toggle.setAttribute('aria-expanded', String(open));
       toggle.querySelector('.burger__label').textContent = open ? 'Close' : 'Menu';
+      /* Lock background scroll while the menu covers the screen. */
+      document.body.style.overflow = open ? 'hidden' : '';
     };
 
     toggle.addEventListener('click', function () {
@@ -253,7 +255,15 @@
       event.preventDefault();
       /* No MLS back end lives in this redesign, so hand the visitor over to
          the live listings page rather than pretending to return results. */
-      window.open('https://marcimetzger.com/listings', '_blank', 'noopener');
+      var url = 'https://marcimetzger.com/listings';
+      var note = document.getElementById('search-note');
+      var win = window.open(url, '_blank', 'noopener');
+      if (win) { win.opener = null; }
+      if (note) {
+        note.textContent = win
+          ? 'Opening Marci\u2019s live listings in a new tab\u2026'
+          : 'Your browser blocked the new tab \u2014 see Marci\u2019s live listings at ' + url;
+      }
     });
   }
 
@@ -274,6 +284,14 @@
       if (invalid) { field.setAttribute('aria-invalid', 'true'); }
       else { field.removeAttribute('aria-invalid'); }
     };
+
+    /* Clear the error flag as soon as the visitor fixes the field. */
+    Array.prototype.forEach.call(
+      contactForm.querySelectorAll('input, textarea'),
+      function (field) {
+        field.addEventListener('input', function () { flag(field, false); });
+      }
+    );
 
     contactForm.addEventListener('submit', function (event) {
       event.preventDefault();
