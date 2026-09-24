@@ -196,7 +196,7 @@
     var show = function (index) {
       current = (index + shots.length) % shots.length;
       var img = shots[current].querySelector('img');
-      lbImg.src = img.src;
+      lbImg.src = img.currentSrc || img.src;
       lbImg.alt = img.alt;
       lbCap.textContent = shots[current].getAttribute('data-caption') || '';
       lbCount.textContent = (current + 1) + ' / ' + shots.length;
@@ -214,7 +214,7 @@
     var closeLb = function () {
       lb.hidden = true;
       document.body.style.overflow = '';
-      lbImg.src = '';
+      lbImg.removeAttribute('src');
       shots[current].focus();
     };
 

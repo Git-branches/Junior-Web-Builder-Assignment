@@ -7,23 +7,28 @@
 <meta name="description" content="Marci Metzger of The Ridge Realty Group has helped buyers and sellers since 1995. Local knowledge, straight guidance and personal service in Pahrump, Nevada.">
 <meta name="theme-color" content="#F6F2EC">
 
-<!-- Link preview. After deploying, swap the two URLs below for the live domain
-     so shared links render a card (og:image must be absolute to be picked up). -->
+<!-- Link preview. og:image must be absolute to be picked up; point these at
+     the live domain on deploy. -->
+<link rel="canonical" href="https://marcimetzger.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Marci Metzger — Pahrump Realtor | The Ridge Realty Group">
 <meta property="og:description" content="Helping buyers and sellers since 1995. Local knowledge, straight guidance and personal service in Pahrump, Nevada.">
-<meta property="og:image" content="assets/img/hero-desert-home.jpg">
-<meta property="og:url" content="/">
+<meta property="og:image" content="https://marcimetzger.com/assets/img/hero-desert-home.jpg">
+<meta property="og:url" content="https://marcimetzger.com/">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://marcimetzger.com/assets/img/hero-desert-home.jpg">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23191816'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='40' fill='%23f6f2ec' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="assets/img/hero-desert-home.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/hero-desert-home.jpg" imagesrcset="assets/img/hero-desert-home-480.webp 480w, assets/img/hero-desert-home-768.webp 768w, assets/img/hero-desert-home-1200.webp 1200w, assets/img/hero-desert-home-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
 
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"RealEstateAgent","name":"Marci Metzger — The Ridge Realty Group","description":"Helping buyers and sellers since 1995 in Pahrump and Southern Nevada.","telephone":"+1-206-919-6886","address":{"@type":"PostalAddress","streetAddress":"3190 HW-160, Suite F","addressLocality":"Pahrump","addressRegion":"NV","postalCode":"89048","addressCountry":"US"},"openingHours":"Mo-Su 08:00-19:00","url":"https://marcimetzger.com/","sameAs":["https://www.facebook.com/MarciHomes/","https://www.instagram.com/marcimetzger_theridge/","https://www.linkedin.com/in/marci-metzger-30642496/"]}
+</script>
 <!-- Entrance animations only exist when JS can switch them off again. -->
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -62,6 +67,7 @@
         <li><a class="nav__link" href="#about">About</a></li>
         <li><a class="nav__link" href="#services">Services</a></li>
         <li><a class="nav__link" href="#homes">Homes</a></li>
+        <li><a class="nav__link" href="#pahrump">Pahrump</a></li>
         <li><a class="nav__link" href="#contact">Contact</a></li>
       </ul>
       <a class="btn btn--solid btn--sm btn--arrow nav__cta" href="#contact">Let&rsquo;s Talk</a>
@@ -76,9 +82,12 @@
   <section class="hero" data-hero aria-labelledby="hero-title">
 
     <div class="hero__bg hero-in hero-in--media" style="--i:0">
-      <img src="assets/img/hero-desert-home.jpg" width="1600" height="1067"
-           alt="Contemporary desert home at sunset with an infinity pool and covered terrace"
-           fetchpriority="high" decoding="async">
+      <picture>
+        <source type="image/webp" srcset="assets/img/hero-desert-home-480.webp 480w, assets/img/hero-desert-home-768.webp 768w, assets/img/hero-desert-home-1200.webp 1200w, assets/img/hero-desert-home-1600.webp 1600w" sizes="100vw">
+        <img src="assets/img/hero-desert-home.jpg" srcset="assets/img/hero-desert-home-480.jpg 480w, assets/img/hero-desert-home-768.jpg 768w, assets/img/hero-desert-home-1200.jpg 1200w, assets/img/hero-desert-home.jpg 1600w" width="1600" height="1067"
+             sizes="100vw" decoding="async" fetchpriority="high"
+             alt="Contemporary desert home at sunset with an infinity pool and covered terrace">
+      </picture>
     </div>
 
     <div class="shell hero__inner">
@@ -98,7 +107,7 @@
       </div>
     </div>
 
-    <a class="hero__scroll hero-in" style="--i:5" href="#paths">
+    <a class="hero__scroll hero-in" style="--i:5" href="#stats">
       <span>Scroll to explore</span>
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M12 4v15M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.4"/>
@@ -108,7 +117,7 @@
   </section>
 
   <!-- ============================================ 03 · CREDIBILITY / STATS -->
-  <section class="stats" aria-labelledby="stats-title">
+  <section class="stats" id="stats" aria-labelledby="stats-title">
     <div class="shell stats__inner">
       <h2 class="stats__statement" id="stats-title">
         Trusted experience.<br>Local knowledge.<br>Personal service.
@@ -129,7 +138,7 @@
         </div>
         <div class="stat reveal">
           <dt class="stat__label">Clients helped in 2021</dt>
-          <dd class="stat__value" data-count="90">90</dd>
+          <dd class="stat__value" data-count="90" data-prefix="~">~90</dd>
         </div>
       </dl>
 
@@ -158,8 +167,12 @@
 
         <article class="path reveal">
           <figure class="path__media">
-            <img src="assets/img/service-1.jpg" width="1400" height="700" loading="lazy" decoding="async"
-                 alt="Southwestern-style home at dusk with a lit patio and pool">
+            <picture>
+              <source type="image/webp" srcset="assets/img/service-1-480.webp 480w, assets/img/service-1-768.webp 768w, assets/img/service-1-1200.webp 1200w, assets/img/service-1-1400.webp 1400w" sizes="(min-width: 56em) 50vw, 100vw">
+              <img src="assets/img/service-1.jpg" srcset="assets/img/service-1-480.jpg 480w, assets/img/service-1-768.jpg 768w, assets/img/service-1-1200.jpg 1200w, assets/img/service-1.jpg 1400w" width="1400" height="700" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 50vw, 100vw"
+                   alt="Southwestern-style home at dusk with a lit patio and pool">
+            </picture>
           </figure>
           <p class="path__index"><span>01</span> Sellers</p>
           <h3 class="path__title">Don&rsquo;t just list it. Get it sold.</h3>
@@ -173,8 +186,12 @@
 
         <article class="path path--offset reveal">
           <figure class="path__media">
-            <img src="assets/img/service-2.jpg" width="1400" height="700" loading="lazy" decoding="async"
-                 alt="Open-plan kitchen with a marble island opening onto a living room and garden">
+            <picture>
+              <source type="image/webp" srcset="assets/img/service-2-480.webp 480w, assets/img/service-2-768.webp 768w, assets/img/service-2-1200.webp 1200w, assets/img/service-2-1400.webp 1400w" sizes="(min-width: 56em) 50vw, 100vw">
+              <img src="assets/img/service-2.jpg" srcset="assets/img/service-2-480.jpg 480w, assets/img/service-2-768.jpg 768w, assets/img/service-2-1200.jpg 1200w, assets/img/service-2.jpg 1400w" width="1400" height="700" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 50vw, 100vw"
+                   alt="Open-plan kitchen with a marble island opening onto a living room and garden">
+            </picture>
           </figure>
           <p class="path__index"><span>02</span> Buyers</p>
           <h3 class="path__title">A guide to the right home.</h3>
@@ -193,7 +210,10 @@
   <!-- ================================================ 05 · PROPERTY SEARCH -->
   <section class="search" id="homes" aria-labelledby="search-title">
     <div class="search__bg" aria-hidden="true">
-      <img src="assets/img/service-3.jpg" width="1500" height="750" loading="lazy" decoding="async" alt="">
+      <picture>
+        <source type="image/webp" srcset="assets/img/service-3-480.webp 480w, assets/img/service-3-768.webp 768w, assets/img/service-3-1200.webp 1200w, assets/img/service-3-1500.webp 1500w" sizes="100vw">
+        <img src="assets/img/service-3.jpg" srcset="assets/img/service-3-480.jpg 480w, assets/img/service-3-768.jpg 768w, assets/img/service-3-1200.jpg 1200w, assets/img/service-3.jpg 1500w" width="1500" height="750" loading="lazy" decoding="async" sizes="100vw" alt="">
+      </picture>
     </div>
 
     <div class="shell search__inner">
@@ -353,8 +373,12 @@
         <li class="gallery__item gallery__item--lead reveal">
           <button class="gallery__btn" type="button"
                   data-caption="The Mountain Falls clubhouse, resort pool and golf course, looking north to the mountains">
-            <img src="assets/img/listing-roseworthy-1.jpg" width="1024" height="682" loading="lazy" decoding="async"
-                 alt="Aerial view of the Mountain Falls clubhouse, resort pool complex and golf course, with mountains behind">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-roseworthy-1-480.webp 480w, assets/img/listing-roseworthy-1-768.webp 768w, assets/img/listing-roseworthy-1-1024.webp 1024w" sizes="(min-width: 56em) 50vw, 100vw">
+              <img src="assets/img/listing-roseworthy-1.jpg" srcset="assets/img/listing-roseworthy-1-480.jpg 480w, assets/img/listing-roseworthy-1-768.jpg 768w, assets/img/listing-roseworthy-1.jpg 1024w" width="1024" height="682" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 50vw, 100vw"
+                   alt="Aerial view of the Mountain Falls clubhouse, resort pool complex and golf course, with mountains behind">
+            </picture>
             <span class="gallery__cap">Clubhouse &amp; resort pool</span>
           </button>
         </li>
@@ -362,8 +386,12 @@
         <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Homes backing straight onto the fairway, with the valley beyond">
-            <img src="assets/img/listing-beacon-ridge-1.jpg" width="900" height="600" loading="lazy" decoding="async"
-                 alt="Aerial view of single-storey homes lining a fairway, with a pond and mountains in the distance">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-beacon-ridge-1-480.webp 480w, assets/img/listing-beacon-ridge-1-768.webp 768w, assets/img/listing-beacon-ridge-1-900.webp 900w" sizes="(min-width: 56em) 25vw, 50vw">
+              <img src="assets/img/listing-beacon-ridge-1.jpg" srcset="assets/img/listing-beacon-ridge-1-480.jpg 480w, assets/img/listing-beacon-ridge-1-768.jpg 768w, assets/img/listing-beacon-ridge-1.jpg 900w" width="900" height="600" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 25vw, 50vw"
+                   alt="Aerial view of single-storey homes lining a fairway, with a pond and mountains in the distance">
+            </picture>
             <span class="gallery__cap">On the fairway</span>
           </button>
         </li>
@@ -371,8 +399,12 @@
         <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Tennis and pickleball courts beside the clubhouse">
-            <img src="assets/img/listing-beacon-ridge-2.jpg" width="900" height="600" loading="lazy" decoding="async"
-                 alt="Aerial view of tennis and pickleball courts next to the community clubhouse">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-beacon-ridge-2-480.webp 480w, assets/img/listing-beacon-ridge-2-768.webp 768w, assets/img/listing-beacon-ridge-2-900.webp 900w" sizes="(min-width: 56em) 25vw, 50vw">
+              <img src="assets/img/listing-beacon-ridge-2.jpg" srcset="assets/img/listing-beacon-ridge-2-480.jpg 480w, assets/img/listing-beacon-ridge-2-768.jpg 768w, assets/img/listing-beacon-ridge-2.jpg 900w" width="900" height="600" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 25vw, 50vw"
+                   alt="Aerial view of tennis and pickleball courts next to the community clubhouse">
+            </picture>
             <span class="gallery__cap">Courts &amp; clubhouse</span>
           </button>
         </li>
@@ -380,8 +412,12 @@
         <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Snow on the range above the valley in winter">
-            <img src="assets/img/listing-beacon-ridge-3.jpg" width="900" height="599" loading="lazy" decoding="async"
-                 alt="Community clubhouse and courts with snow-capped mountains rising behind the valley">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-beacon-ridge-3-480.webp 480w, assets/img/listing-beacon-ridge-3-768.webp 768w, assets/img/listing-beacon-ridge-3-900.webp 900w" sizes="(min-width: 56em) 25vw, 50vw">
+              <img src="assets/img/listing-beacon-ridge-3.jpg" srcset="assets/img/listing-beacon-ridge-3-480.jpg 480w, assets/img/listing-beacon-ridge-3-768.jpg 768w, assets/img/listing-beacon-ridge-3.jpg 900w" width="900" height="599" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 25vw, 50vw"
+                   alt="Community clubhouse and courts with snow-capped mountains rising behind the valley">
+            </picture>
             <span class="gallery__cap">Winter on the range</span>
           </button>
         </li>
@@ -389,8 +425,12 @@
         <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="A backyard pool and spa, with the golf course just past the fence">
-            <img src="assets/img/listing-ailanto-3.jpg" width="900" height="599" loading="lazy" decoding="async"
-                 alt="Aerial view of a tile-roofed home with a backyard pool and spa backing onto the golf course">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-ailanto-3-480.webp 480w, assets/img/listing-ailanto-3-768.webp 768w, assets/img/listing-ailanto-3-900.webp 900w" sizes="(min-width: 56em) 25vw, 50vw">
+              <img src="assets/img/listing-ailanto-3.jpg" srcset="assets/img/listing-ailanto-3-480.jpg 480w, assets/img/listing-ailanto-3-768.jpg 768w, assets/img/listing-ailanto-3.jpg 900w" width="900" height="599" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 25vw, 50vw"
+                   alt="Aerial view of a tile-roofed home with a backyard pool and spa backing onto the golf course">
+            </picture>
             <span class="gallery__cap">Pool &amp; spa</span>
           </button>
         </li>
@@ -398,8 +438,12 @@
         <li class="gallery__item gallery__item--wide reveal">
           <button class="gallery__btn" type="button"
                   data-caption="The same golf course pond from ground level, looking to the mountains">
-            <img src="assets/img/pahrump-pond.jpg" width="1400" height="929" loading="lazy" decoding="async"
-                 alt="Golf course pond with fountains, framed by pines and the mountains above Pahrump">
+            <picture>
+              <source type="image/webp" srcset="assets/img/pahrump-pond-480.webp 480w, assets/img/pahrump-pond-768.webp 768w, assets/img/pahrump-pond-1200.webp 1200w, assets/img/pahrump-pond-1400.webp 1400w" sizes="(min-width: 56em) 50vw, 100vw">
+              <img src="assets/img/pahrump-pond.jpg" srcset="assets/img/pahrump-pond-480.jpg 480w, assets/img/pahrump-pond-768.jpg 768w, assets/img/pahrump-pond-1200.jpg 1200w, assets/img/pahrump-pond.jpg 1400w" width="1400" height="929" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 50vw, 100vw"
+                   alt="Golf course pond with fountains, framed by pines and the mountains above Pahrump">
+            </picture>
             <span class="gallery__cap">Mountain Falls</span>
           </button>
         </li>
@@ -407,8 +451,12 @@
         <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Desert landscaping framed by a full-height window wall">
-            <img src="assets/img/listing-ailanto-1.jpg" width="900" height="599" loading="lazy" decoding="async"
-                 alt="Sunroom with a full-height window wall looking onto desert landscaping and cactus">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-ailanto-1-480.webp 480w, assets/img/listing-ailanto-1-768.webp 768w, assets/img/listing-ailanto-1-900.webp 900w" sizes="(min-width: 56em) 25vw, 50vw">
+              <img src="assets/img/listing-ailanto-1.jpg" srcset="assets/img/listing-ailanto-1-480.jpg 480w, assets/img/listing-ailanto-1-768.jpg 768w, assets/img/listing-ailanto-1.jpg 900w" width="900" height="599" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 25vw, 50vw"
+                   alt="Sunroom with a full-height window wall looking onto desert landscaping and cactus">
+            </picture>
             <span class="gallery__cap">Room with a view</span>
           </button>
         </li>
@@ -416,8 +464,12 @@
         <li class="gallery__item reveal">
           <button class="gallery__btn" type="button"
                   data-caption="Quiet streets, wide lots and the Spring Mountains on the skyline">
-            <img src="assets/img/listing-ailanto-2.jpg" width="900" height="599" loading="lazy" decoding="async"
-                 alt="Aerial view of a quiet residential street of tile-roofed homes with snow-capped mountains beyond">
+            <picture>
+              <source type="image/webp" srcset="assets/img/listing-ailanto-2-480.webp 480w, assets/img/listing-ailanto-2-768.webp 768w, assets/img/listing-ailanto-2-900.webp 900w" sizes="(min-width: 56em) 25vw, 50vw">
+              <img src="assets/img/listing-ailanto-2.jpg" srcset="assets/img/listing-ailanto-2-480.jpg 480w, assets/img/listing-ailanto-2-768.jpg 768w, assets/img/listing-ailanto-2.jpg 900w" width="900" height="599" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 25vw, 50vw"
+                   alt="Aerial view of a quiet residential street of tile-roofed homes with snow-capped mountains beyond">
+            </picture>
             <span class="gallery__cap">Wide lots, quiet streets</span>
           </button>
         </li>
@@ -444,8 +496,12 @@
 
         <article class="service reveal">
           <figure class="service__media">
-            <img src="assets/img/tile-interior.jpg" width="1000" height="1000" loading="lazy" decoding="async"
-                 alt="Bright living room detail with a low white table, books and a potted plant">
+            <picture>
+              <source type="image/webp" srcset="assets/img/tile-interior-480.webp 480w, assets/img/tile-interior-768.webp 768w, assets/img/tile-interior-1000.webp 1000w" sizes="(min-width: 56em) 33vw, 100vw">
+              <img src="assets/img/tile-interior.jpg" srcset="assets/img/tile-interior-480.jpg 480w, assets/img/tile-interior-768.jpg 768w, assets/img/tile-interior.jpg 1000w" width="1000" height="1000" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 33vw, 100vw"
+                   alt="Bright living room detail with a low white table, books and a potted plant">
+            </picture>
           </figure>
           <p class="service__index">01</p>
           <p class="service__kicker">Buy</p>
@@ -459,8 +515,12 @@
 
         <article class="service reveal">
           <figure class="service__media">
-            <img src="assets/img/tile-exterior.jpg" width="1000" height="1000" loading="lazy" decoding="async"
-                 alt="Modern white home with a lawn and lap pool overlooking a valley">
+            <picture>
+              <source type="image/webp" srcset="assets/img/tile-exterior-480.webp 480w, assets/img/tile-exterior-768.webp 768w, assets/img/tile-exterior-1000.webp 1000w" sizes="(min-width: 56em) 33vw, 100vw">
+              <img src="assets/img/tile-exterior.jpg" srcset="assets/img/tile-exterior-480.jpg 480w, assets/img/tile-exterior-768.jpg 768w, assets/img/tile-exterior.jpg 1000w" width="1000" height="1000" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 33vw, 100vw"
+                   alt="Modern white home with a lawn and lap pool overlooking a valley">
+            </picture>
           </figure>
           <p class="service__index">02</p>
           <p class="service__kicker">Sell</p>
@@ -474,8 +534,12 @@
 
         <article class="service reveal">
           <figure class="service__media">
-            <img src="assets/img/tile-handshake.jpg" width="1000" height="1000" loading="lazy" decoding="async"
-                 alt="Two people shaking hands across a table after signing paperwork">
+            <picture>
+              <source type="image/webp" srcset="assets/img/tile-handshake-480.webp 480w, assets/img/tile-handshake-768.webp 768w, assets/img/tile-handshake-1000.webp 1000w" sizes="(min-width: 56em) 33vw, 100vw">
+              <img src="assets/img/tile-handshake.jpg" srcset="assets/img/tile-handshake-480.jpg 480w, assets/img/tile-handshake-768.jpg 768w, assets/img/tile-handshake.jpg 1000w" width="1000" height="1000" loading="lazy" decoding="async"
+                   sizes="(min-width: 56em) 33vw, 100vw"
+                   alt="Two people shaking hands across a table after signing paperwork">
+            </picture>
           </figure>
           <p class="service__index">03</p>
           <p class="service__kicker">Expertise</p>
@@ -496,8 +560,12 @@
     <div class="shell about__inner">
 
       <figure class="about__portrait reveal reveal--zoom">
-        <img src="assets/img/marci-portrait.jpg" width="1100" height="1651" loading="lazy" decoding="async"
-             alt="Portrait of Marci Metzger, REALTOR with The Ridge Realty Group">
+        <picture>
+          <source type="image/webp" srcset="assets/img/marci-portrait-480.webp 480w, assets/img/marci-portrait-768.webp 768w, assets/img/marci-portrait-1100.webp 1100w" sizes="(min-width: 56em) 35vw, 100vw">
+          <img src="assets/img/marci-portrait.jpg" srcset="assets/img/marci-portrait-480.jpg 480w, assets/img/marci-portrait-768.jpg 768w, assets/img/marci-portrait.jpg 1100w" width="1100" height="1651" loading="lazy" decoding="async"
+               sizes="(min-width: 56em) 35vw, 100vw"
+               alt="Portrait of Marci Metzger, REALTOR with The Ridge Realty Group">
+        </picture>
 
         <!-- Anchored to the portrait so the number reads as "call her", not
              "call an office". Stacks below the photo on small screens. -->
@@ -568,7 +636,7 @@
                     <path d="M6.5 3h3L11 7 9 8.5a12 12 0 0 0 5.5 5.5L16 12l4 1.5v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/>
                   </svg>
                 </span>
-                Call or text
+                Call or text Marci directly
               </dt>
               <dd><a class="info__strong" href="tel:+12069196886">(206) 919-6886</a></dd>
             </div>
@@ -684,6 +752,7 @@
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#homes">Homes</a></li>
+          <li><a href="#pahrump">Pahrump</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -789,7 +858,7 @@
   <button class="lightbox__close" type="button" data-lb-close aria-label="Close gallery">&times;</button>
   <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="Previous photo">&#8249;</button>
   <figure class="lightbox__figure">
-    <img data-lb-img src="" alt="">
+    <img data-lb-img alt="">
     <figcaption class="lightbox__cap">
       <span data-lb-cap></span>
       <span class="lightbox__count" data-lb-count></span>

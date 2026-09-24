@@ -73,6 +73,9 @@ body {
 }
 
 img { display: block; max-width: 100%; height: auto; }
+/* <picture> is only a format switcher here — it must not create a box that
+   would break the height:100% chains on hero, gallery and media images. */
+picture { display: contents; }
 figure { margin: 0; }
 ul { margin: 0; padding: 0; list-style: none; }
 p  { margin: 0 0 1.15em; }
