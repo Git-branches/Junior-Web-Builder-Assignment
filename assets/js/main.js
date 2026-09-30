@@ -247,6 +247,32 @@
     });
   }
 
+  /* ------------------------------------------------------ FAQ accordion */
+  /* Single-open: opening one answer closes the rest. CSS keeps answers
+     visible without JS; with JS they collapse until opened. */
+  var faq = document.querySelector('[data-faq]');
+
+  if (faq) {
+    var items = Array.prototype.slice.call(faq.querySelectorAll('.faq__item'));
+
+    var setItem = function (item, open) {
+      item.classList.toggle('is-open', open);
+      item.querySelector('.faq__btn').setAttribute('aria-expanded', String(open));
+    };
+
+    items.forEach(function (item) {
+      var btn = item.querySelector('.faq__btn');
+      btn.addEventListener('click', function () {
+        var willOpen = !item.classList.contains('is-open');
+        items.forEach(function (other) { setItem(other, false); });
+        setItem(item, willOpen);
+      });
+    });
+
+    /* Open the first question by default so the section never reads as empty. */
+    if (items.length) { setItem(items[0], true); }
+  }
+
   /* --------------------------------------------------- Property search */
   var searchForm = document.querySelector('[data-search-form]');
 

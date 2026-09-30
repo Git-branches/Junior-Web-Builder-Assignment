@@ -1084,6 +1084,81 @@ section { position: relative; }
   }
 }
 
+/* ------------------------------------------------------------ 12b · FAQ */
+.faq { padding-block: var(--section); }
+.faq__inner { display: grid; gap: 0; }
+.faq .section-head { margin-bottom: clamp(2rem, 4vw, 3rem); }
+.faq__list {
+  max-width: 48rem;
+  border-top: 1px solid var(--line);
+}
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__heading { margin: 0; }
+.faq__btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  padding: 1.35rem .25rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 1.25;
+  color: var(--charcoal);
+  transition: color .2s var(--ease);
+}
+.faq__btn:hover { color: var(--olive); }
+/* Plus mark, square-cornered like every other control here. */
+.faq__icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  color: var(--taupe-ink);
+  transition: transform .3s var(--ease), color .2s var(--ease);
+}
+.faq__icon::before,
+.faq__icon::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+.faq__icon::before { left: 0; top: 7px; width: 15px; height: 1.5px; }
+.faq__icon::after { left: 7px; top: 0; width: 1.5px; height: 15px; }
+.faq__btn:hover .faq__icon { color: var(--olive); }
+.faq__item.is-open .faq__icon { transform: rotate(45deg); }
+
+/* No-JS fallback: answers stay visible. JS collapses them (see below). */
+.faq__panel {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .35s var(--ease);
+}
+.faq__panel > p {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+  padding: 0 .25rem 1.5rem;
+  max-width: 40rem;
+  color: var(--warm-700);
+  font-size: .9375rem;
+}
+.faq__panel a { color: var(--charcoal); }
+.js .faq__panel { grid-template-rows: 0fr; visibility: hidden; }
+.js .faq__panel > p { visibility: hidden; opacity: 0; transition: opacity .25s var(--ease), visibility .35s; }
+.js .faq__item.is-open .faq__panel { grid-template-rows: 1fr; visibility: visible; }
+.js .faq__item.is-open .faq__panel > p { visibility: visible; opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__panel, .js .faq__panel > p { transition: none; }
+}
+
 /* ------------------------------------------------------------ 13 · CONTACT */
 .contact {
   padding-block: var(--section);
