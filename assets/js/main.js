@@ -280,8 +280,45 @@
     searchForm.addEventListener('submit', function (event) {
       event.preventDefault();
       /* No MLS back end lives in this redesign, so hand the visitor over to
-         the live listings page rather than pretending to return results. */
-      var url = 'https://marcimetzger.com/listings';
+         the live listings page rather than pretending to return results.
+         Carry the chosen filters in the URL so nothing the visitor picked
+         is silently dropped — harmless if the destination ignores them,
+         and ready if an MLS search is ever wired up. */
+      var get = function (name) {
+        var field = searchForm.elements[name];
+        return field ? String(field.value || '').trim() : '';
+      };
+      /* Prices are free text: strip currency formatting, keep only a number. */
+      var num = function (raw) {
+        var cleaned = raw.replace(/[$,\s]/g, '');
+        return cleaned !== '' && isFinite(cleaned) ? cleaned : '';
+      };
+
+      var params = new URLSearchParams();
+      var location = get('location');
+      var type = get('type');
+      var beds = get('beds');
+      var baths = get('baths');
+      var min = num(get('min'));
+      var max = num(get('max'));
+      var sort = get('sort');
+
+      /* Friendly fix: a reversed range is almost always a typo, not intent. */
+      if (min !== '' && max !== '' && parseFloat(min) > parseFloat(max)) {
+        var swap = min; min = max; max = swap;
+      }
+
+      if (location) { params.append('location', location); }
+      if (type) { params.append('type', type); }
+      if (beds) { params.append('beds', beds); }
+      if (baths) { params.append('baths', baths); }
+      if (min !== '') { params.append('min', min); }
+      if (max !== '') { params.append('max', max); }
+      if (sort) { params.append('sort', sort); }
+
+      var base = 'https://marcimetzger.com/listings';
+      var query = params.toString();
+      var url = query ? base + '?' + query : base;
       var note = document.getElementById('search-note');
       var win = window.open(url, '_blank', 'noopener');
       if (win) { win.opener = null; }
