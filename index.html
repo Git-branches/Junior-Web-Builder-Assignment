@@ -953,16 +953,21 @@
 </button>
 
 <!-- Gallery lightbox. Inert until a gallery photo is opened; the gallery works
-     as a plain grid of images without it. -->
+     as a plain grid of images without it. Thumbnails are built by JS from the
+     gallery buttons, so no-JS still gets the full grid. -->
 <div class="lightbox" data-lb hidden role="dialog" aria-modal="true" aria-label="Photo gallery">
   <button class="lightbox__close" type="button" data-lb-close aria-label="Close gallery">&times;</button>
   <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="Previous photo">&#8249;</button>
   <figure class="lightbox__figure">
-    <img data-lb-img alt="">
+    <div class="lightbox__stage" data-lb-stage>
+      <span class="lightbox__spinner" data-lb-spinner aria-hidden="true"></span>
+      <img data-lb-img alt="">
+    </div>
     <figcaption class="lightbox__cap">
       <span data-lb-cap></span>
       <span class="lightbox__count" data-lb-count></span>
     </figcaption>
+    <div class="lightbox__thumbs" data-lb-thumbs role="group" aria-label="Choose a photo"></div>
   </figure>
   <button class="lightbox__nav lightbox__nav--next" type="button" data-lb-next aria-label="Next photo">&#8250;</button>
 </div>

@@ -182,6 +182,8 @@
   }
 
   /* ------------------------------------------------------ Gallery lightbox */
+  /* Upgraded: full-resolution image (not the grid thumbnail), swipe/drag,
+     neighbour preloading, thumbnail strip, Home/End keys, click-to-zoom. */
   var gallery = document.querySelector('[data-gallery]');
   var lb = document.querySelector('[data-lb]');
 
@@ -191,18 +193,84 @@
     var lbCap = lb.querySelector('[data-lb-cap]');
     var lbCount = lb.querySelector('[data-lb-count]');
     var lbClose = lb.querySelector('[data-lb-close]');
+    var lbPrev = lb.querySelector('[data-lb-prev]');
+    var lbNext = lb.querySelector('[data-lb-next]');
+    var lbStage = lb.querySelector('[data-lb-stage]');
+    var lbSpinner = lb.querySelector('[data-lb-spinner]');
+    var lbThumbs = lb.querySelector('[data-lb-thumbs]');
     var current = 0;
+    var lastFocus = null;
+
+    /* Largest URL in a srcset list ("… 480w, … 1024w" -> last entry). Falls
+       back to img.src when no srcset is present. */
+    var largestFromSrcset = function (img) {
+      var set = img.getAttribute('srcset') || '';
+      var parts = set.split(',');
+      if (!parts.length || !parts[0].trim()) { return img.src; }
+      var last = parts[parts.length - 1].trim().split(/\s+/)[0];
+      return last || img.src;
+    };
+
+    /* Accessible names derived from captions, so markup stays lean. */
+    shots.forEach(function (btn, i) {
+      var cap = btn.getAttribute('data-caption') || btn.querySelector('img').alt;
+      btn.setAttribute('aria-label', 'View photo ' + (i + 1) + ' of ' + shots.length + ': ' + cap);
+    });
+
+    /* Thumbnail strip, built once from the same images (small src is fine). */
+    var thumbBtns = shots.map(function (btn, i) {
+      var img = btn.querySelector('img');
+      var t = document.createElement('button');
+      t.type = 'button';
+      t.className = 'lightbox__thumb';
+      t.setAttribute('aria-label', 'Show photo ' + (i + 1) + ' of ' + shots.length);
+      var thumb = document.createElement('img');
+      thumb.src = img.currentSrc || img.src;
+      thumb.alt = '';
+      thumb.loading = 'lazy';
+      thumb.decoding = 'async';
+      t.appendChild(thumb);
+      t.addEventListener('click', function () { show(i); });
+      if (lbThumbs) { lbThumbs.appendChild(t); }
+      return t;
+    });
+
+    var preload = function (index) {
+      var j = (index + shots.length) % shots.length;
+      var img = shots[j].querySelector('img');
+      var pre = new Image();
+      pre.decoding = 'async';
+      pre.src = largestFromSrcset(img);
+    };
 
     var show = function (index) {
       current = (index + shots.length) % shots.length;
       var img = shots[current].querySelector('img');
-      lbImg.src = img.currentSrc || img.src;
+      var full = largestFromSrcset(img);
+      lbStage.classList.remove('is-zoomed');
+      lbImg.classList.remove('is-ready');
+      if (lbSpinner) { lbSpinner.hidden = false; }
       lbImg.alt = img.alt;
+      lbImg.src = full;
       lbCap.textContent = shots[current].getAttribute('data-caption') || '';
       lbCount.textContent = (current + 1) + ' / ' + shots.length;
+      thumbBtns.forEach(function (t, i) {
+        var on = i === current;
+        t.classList.toggle('is-active', on);
+        if (on) { t.setAttribute('aria-current', 'true'); }
+        else { t.removeAttribute('aria-current'); }
+      });
+      preload(current + 1);
+      preload(current - 1);
     };
 
+    lbImg.addEventListener('load', function () {
+      lbImg.classList.add('is-ready');
+      if (lbSpinner) { lbSpinner.hidden = true; }
+    });
+
     var openLb = function (index) {
+      lastFocus = document.activeElement;
       show(index);
       lb.hidden = false;
       document.body.style.overflow = 'hidden';
@@ -215,29 +283,61 @@
       lb.hidden = true;
       document.body.style.overflow = '';
       lbImg.removeAttribute('src');
-      shots[current].focus();
+      lbImg.classList.remove('is-ready');
+      if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
+      else { shots[current].focus(); }
     };
 
     shots.forEach(function (btn, i) {
       btn.addEventListener('click', function () { openLb(i); });
     });
 
-    lb.querySelector('[data-lb-prev]').addEventListener('click', function () { show(current - 1); });
-    lb.querySelector('[data-lb-next]').addEventListener('click', function () { show(current + 1); });
+    lbPrev.addEventListener('click', function () { show(current - 1); });
+    lbNext.addEventListener('click', function () { show(current + 1); });
     lbClose.addEventListener('click', closeLb);
+
+    /* Click-to-zoom for detail (tile grout, mountain ridges). Toggles a
+       scaled state; scrolls within the stage when zoomed. */
+    lbImg.addEventListener('click', function () {
+      lbStage.classList.toggle('is-zoomed');
+    });
+
+    /* Swipe: touch + mouse drag on the stage. 40px threshold, horizontal only
+       so vertical page gestures are left alone. */
+    var startX = null;
+    var dragging = false;
+    var onStart = function (x) { startX = x; dragging = true; };
+    var onEnd = function (x) {
+      if (!dragging || startX === null) { return; }
+      var dx = x - startX;
+      if (Math.abs(dx) > 40) { show(dx < 0 ? current + 1 : current - 1); }
+      startX = null;
+      dragging = false;
+    };
+
+    lbStage.addEventListener('touchstart', function (e) {
+      if (e.touches.length === 1) { onStart(e.touches[0].clientX); }
+    }, { passive: true });
+    lbStage.addEventListener('touchend', function (e) {
+      if (e.changedTouches.length === 1) { onEnd(e.changedTouches[0].clientX); }
+    }, { passive: true });
+    lbStage.addEventListener('mousedown', function (e) { onStart(e.clientX); });
+    lbStage.addEventListener('mouseup', function (e) { onEnd(e.clientX); });
 
     /* Clicking the backdrop — but not the photo or the controls — closes it. */
     lb.addEventListener('click', function (event) {
-      if (event.target === lb || event.target.classList.contains('lightbox__figure')) { closeLb(); }
+      if (event.target === lb) { closeLb(); }
     });
 
     document.addEventListener('keydown', function (event) {
       if (lb.hidden) { return; }
       if (event.key === 'Escape') { closeLb(); }
-      if (event.key === 'ArrowLeft') { show(current - 1); }
-      if (event.key === 'ArrowRight') { show(current + 1); }
+      else if (event.key === 'ArrowLeft') { show(current - 1); }
+      else if (event.key === 'ArrowRight') { show(current + 1); }
+      else if (event.key === 'Home') { event.preventDefault(); show(0); }
+      else if (event.key === 'End') { event.preventDefault(); show(shots.length - 1); }
       /* Keep tabbing inside the dialog while it is open. */
-      if (event.key === 'Tab') {
+      else if (event.key === 'Tab') {
         var focusable = lb.querySelectorAll('button');
         var first = focusable[0];
         var last = focusable[focusable.length - 1];
